@@ -2,9 +2,14 @@ import { useState } from "react";
 interface CounterProps {
     initialValue?:number
 }
+
+interface CounterState {
+    counter:number;
+    clicks:number;
+}
 export const CounterBy = ({initialValue = 10 }:CounterProps) => {
 
-    const [counter, setCounter] = useState({
+    const [counter, setCounter] = useState<CounterState>({
         counter:initialValue,
         clicks:0
     });
