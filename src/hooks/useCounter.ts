@@ -1,35 +1,35 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-const MAXIMUN_COUNT = 10;
 
-export const useCounter = () => {
+
+export const useCounter = ({maxCount=0}) => {
     const [counter, setCounter] = useState(5);
 
     const handleClick = () => {
-        if(counter === MAXIMUN_COUNT){
+        if(counter === maxCount){
             return;
         }
         setCounter(prev =>  prev+1);
     }
 
-    const counterElement = useRef<HTMLHeadingElement>(null)
-
-    useEffect(() => {
-      if( counter < 10 ){
-        return 
-      }
-
-      const tl = gsap.timeline();
-      tl.to(counterElement.current,{y:-10,duration:0.2,ease:'ease.out'});
-      tl.to(counterElement.current,{y:0,duration:1,ease:'bounce.out'});
-      
+    const elementToAnimate = useRef<any>(null)
+    const tl = useRef(gsap.timeline());
+    useLayoutEffect(() => {
+        if( !elementToAnimate ) return
+        tl.current.to(elementToAnimate.current,{y:-10,duration:0.2,ease:'ease.out'});
+        tl.current.to(elementToAnimate.current,{y:0,duration:1,ease:'bounce.out'});
+        
+    }, [])
+ useEffect(() => {
+ 
+    tl.current.play(0);  
      
-    }, [counter])
+}, [counter])
     
   return {
     //props
     counter,
-    counterElement,
+ elementToAnimate,
     //methods
     handleClick,
   }
